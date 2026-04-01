@@ -1,77 +1,123 @@
 # TeamOps Hub
 
-TeamOps Hub is a WordPress plugin for internal team coordination in IT companies. It gives managers and team members a central place to organize projects, assign work, track task progress, and monitor what is due next.
+TeamOps Hub is a custom-table-first WordPress plugin for internal project and task coordination. It gives managers and team members a structured workspace for planning projects, assigning work, tracking progress, and collaborating on execution inside WordPress.
 
-The current release is still early, but it now goes beyond bare MVP CRUD. Projects and tasks have stronger validation, visibility controls, filtering, and daily-operational UX while preserving a foundation designed for future expansion into helpdesk, documents, notifications, reporting, and broader internal operations workflows.
+The plugin is designed for internal operations teams that want a practical delivery workspace today while keeping a solid architecture for future modules such as documents, notifications, reporting, and helpdesk workflows.
 
-## Who It Is For
+## Description
 
-- IT companies managing internal delivery teams
-- project managers coordinating projects and assignments
-- team leads tracking project and task progress
-- administrators who want a structured internal operations plugin inside WordPress
-- team members who need a simple view of assigned work and status updates
+TeamOps Hub helps your organization:
 
-## What The Plugin Does
+- manage projects with owners, members, priorities, statuses, and milestones
+- manage tasks inside projects with assignees, dates, workflow statuses, checklist items, and discussion
+- give team members a focused workspace for updating work without exposing full admin management screens
+- provide a front-end execution workspace with portfolio, overview, Kanban, tasks, and milestone views
+- keep operational data in dedicated plugin tables instead of storing projects and tasks as WordPress posts
 
-TeamOps Hub currently helps your team:
-
-- create and manage projects
-- assign team members to projects
-- create and manage tasks inside projects
-- assign tasks to individual users
-- manage task workflow statuses from Settings
-- organize work against project milestones
-- break larger tasks into checklist-style subtasks
-- filter work more effectively from the Projects and Tasks screens
-- give team members a focused `My Work` area for assigned tasks
-- give front-end workspace users a portfolio dashboard and project-specific tabbed workspace
-- give managers a starting dashboard for counts, overdue work, and upcoming tasks
-
-## Current Features
+## Key Features
 
 ### Project Management
 
-- create projects
-- edit projects
-- mark projects with statuses and priorities
-- set project owner/manager
-- assign members to a project
-- filter projects by search, status, priority, and owner
-- store descriptions, notes, dates, and project type/category
-- manage project milestones
-- edit existing project milestones from the project screen
-- view related tasks and project progress summary
-- restrict project visibility based on permissions and project membership
+- Create and edit projects
+- Set project owner, status, priority, dates, and notes
+- Assign project team members
+- Manage project milestones
+- Track project progress and related work
+- Restrict project visibility based on capability and membership rules
 
 ### Task Management
 
-- create tasks under projects
-- assign each task to one user
-- restrict task assignment to the selected project team plus the project owner
-- manage task status, priority, dates, effort fields, and milestone linkage
-- use configurable task statuses seeded with `To Do`, `In Progress`, `In Review`, and `Done`
-- add and complete checklist-style subtasks under each task
-- add task comments and mention teammates with `@username`
-- move tasks across workflow columns from the front-end Kanban board
-- filter tasks by search, project, milestone, status, assignee, priority, and due state
-- identify overdue and upcoming tasks using closed workflow statuses
-- allow team members to update the status of tasks assigned to them
-- provide validation feedback when save rules are not met
-- show in-app mention notifications in `My Work`
+- Create tasks within projects
+- Assign tasks to project members
+- Use configurable workflow statuses
+- Track due dates, estimated hours, and actual hours
+- Add checklist-style subtasks
+- Add task comments with `@mentions`
+- Filter tasks by project, status, assignee, milestone, and due state
+- Move tasks on the front-end Kanban board
 
-### Admin and Team Views
+### Team Workspaces
 
-- Dashboard
-- Projects
-- Tasks
-- My Work
+- Dashboard for project and task visibility
+- Admin `My Work` area for assigned work
 - Front-end workspace via `[teamops_hub_workspace]`
-- Reports placeholder
-- Future Modules placeholder
-- Settings
+- Project-specific tabs for `Overview`, `Kanban`, `Tasks`, `Milestones`, and future file handling
 
-## User Roles
+## Who This Plugin Is For
+
+- Internal IT and delivery teams
+- Project managers and team leads
+- Operations-focused WordPress administrators
+- Team members who need a clean place to review and update assigned work
+
+## Requirements
+
+- WordPress 6.x or newer recommended
+- PHP 7.4 or newer recommended
+- A WordPress site where internal users can log in
+
+## Installation
+
+### Install From Plugin Folder
+
+1. Download or clone this repository.
+2. Copy the `teamops-hub` folder into `wp-content/plugins/`.
+3. In WordPress admin, go to `Plugins`.
+4. Activate `TeamOps Hub`.
+
+### Install From ZIP
+
+1. Download a ZIP of this plugin.
+2. In WordPress admin, go to `Plugins > Add New > Upload Plugin`.
+3. Upload the ZIP file.
+4. Click `Install Now`.
+5. Activate `TeamOps Hub`.
+
+## What Happens On Activation
+
+When activated, TeamOps Hub:
+
+- creates its custom database tables
+- registers TeamOps roles and capabilities
+- enables runtime upgrade checks for future schema and role updates
+
+## First-Time Setup
+
+After activation, recommended setup is:
+
+1. Open `TeamOps Hub > Settings`.
+2. Review the task workflow statuses and confirm they match your process.
+3. Decide which users should be `TeamOps Managers` and which should be `TeamOps Members`.
+4. Create your first project.
+5. Assign project members.
+6. Add milestones if needed.
+7. Add tasks and assign them to project members.
+8. Ask team members to use `My Work` or the front-end workspace.
+
+## Front-End Workspace Setup
+
+TeamOps Hub includes a front-end workspace shortcode for daily execution outside wp-admin.
+
+### Shortcode
+
+`[teamops_hub_workspace]`
+
+### To Use It
+
+1. Create a new WordPress page.
+2. Add the shortcode `[teamops_hub_workspace]`.
+3. Publish the page.
+4. Make sure the user is logged in with TeamOps access.
+
+The front-end workspace currently includes:
+
+- portfolio dashboard
+- project overview
+- Kanban board
+- task execution and task detail editing
+- milestone snapshot
+
+## User Roles and Permissions
 
 ### Administrators
 
@@ -82,72 +128,49 @@ TeamOps Hub currently helps your team:
 
 - can create and edit projects
 - can create and edit tasks
-- can review dashboard and reporting areas
-- can manage plugin settings
+- can manage settings and review operational dashboards
 
 ### TeamOps Members
 
 - can access TeamOps
 - can view assigned work
-- can update the status of their own assigned tasks
+- can update their own task status and allowed workspace fields
 
-## Installation
-
-1. Copy the `teamops-hub` plugin folder into your WordPress `wp-content/plugins/` directory.
-2. In the WordPress admin, go to `Plugins`.
-3. Activate `TeamOps Hub`.
-4. On activation, the plugin creates its custom database tables and registers TeamOps roles/capabilities.
-
-## Recommended First-Time Setup
-
-After activation:
-
-1. Confirm the plugin appears in the WordPress admin menu as `TeamOps Hub`.
-2. Review the `Settings` page and confirm the task workflow statuses match your process.
-3. Decide which users should be managers and which should be team members.
-4. Create your first project.
-5. Assign project members.
-6. Add milestones under the project if needed.
-7. Add tasks under the project.
-8. Ask team members to use `My Work` to review assignments and update task status.
-9. Create a WordPress page with the `[teamops_hub_workspace]` shortcode if you want a front-end workspace for daily execution.
-
-## Typical Workflow
+## Typical Usage
 
 ### For Managers
 
-1. Create a project
-2. Set status, priority, owner, and dates
-3. Assign project members
-4. Create milestones where useful
-5. Create tasks inside the project
-6. Assign tasks to project team members
-7. Track progress through the Dashboard, Projects, and Tasks screens
+1. Create a project.
+2. Add the project owner and members.
+3. Add milestones if needed.
+4. Create tasks inside the project.
+5. Assign tasks to project members.
+6. Track progress from the dashboard, task views, and Kanban workspace.
 
 ### For Team Members
 
-1. Open `TeamOps Hub > My Work`
-2. Review assigned projects
-3. Review assigned tasks
-4. Update task statuses as work moves forward
+1. Open `TeamOps Hub > My Work` or the front-end workspace page.
+2. Review assigned tasks.
+3. Update statuses as work moves forward.
+4. Complete checklist items.
+5. Add comments or mentions where needed.
 
-### For Front-End Workspace Users
+## Current Screens
 
-1. Create or open a WordPress page containing `[teamops_hub_workspace]`
-2. Sign in with a TeamOps-enabled account
-3. Review the all-project portfolio dashboard
-4. Open a project to switch into its dedicated workspace tabs
-5. Use `Overview`, `Kanban`, `Tasks`, and `Milestones` to work inside the selected project
-6. Move work on the Kanban board or update status from detailed task cards
-7. Edit task details, complete checklist items, and post comments from the front end
+- Dashboard
+- Projects
+- Tasks
+- My Work
+- Settings
+- Reports placeholder
+- Future Modules placeholder
+- Front-end workspace
 
-## Current Technical Approach
+## Technical Notes
 
-TeamOps Hub is built as a custom-table-first plugin. That means core operational data is stored in dedicated plugin tables instead of relying on WordPress posts and post meta for projects and tasks.
+TeamOps Hub is built as a custom-table-first plugin. Core operational data is stored in dedicated tables rather than WordPress posts and post meta.
 
-This approach is intended to make the plugin easier to scale and easier to extend over time as new business modules are added.
-
-## Custom Tables Used
+Current custom tables include:
 
 - `teamops_hub_projects`
 - `teamops_hub_project_members`
@@ -155,34 +178,35 @@ This approach is intended to make the plugin easier to scale and easier to exten
 - `teamops_hub_activity_log`
 - `teamops_hub_task_statuses`
 - `teamops_hub_milestones`
+- `teamops_hub_task_subtasks`
 - `teamops_hub_task_comments`
 - `teamops_hub_task_comment_mentions`
 - `teamops_hub_notifications`
 
 ## Current Limitations
 
-This is still an early product foundation, so some areas are intentionally lightweight right now:
+This is still an early product foundation. At the moment:
 
-- reports are basic placeholders
-- list screens are custom admin tables, not full `WP_List_Table` implementations yet
+- reporting is still lightweight
+- admin list screens are custom implementations, not `WP_List_Table`
 - attachments, dependencies, and time tracking are not yet implemented
-- notifications currently focus on in-app mention alerts and are not yet a full delivery system
-- runtime behavior still needs broader real-world validation in a live WordPress environment
+- notification delivery is still limited and currently focused on in-app mention alerts
+- broader live-site validation is still ongoing
 
-## Planned Direction
+## Roadmap Direction
 
-Future expansion is expected to include:
+Planned future expansion includes:
 
-- comments with @mentions
 - richer notifications
-- attachments
-- reporting dashboards and KPI widgets
-- activity feed and audit visibility
-- REST/API integrations and external connectors
+- attachments and file workflows
+- better reporting and KPI views
+- activity and audit visibility
+- REST/API integrations
+- additional business modules such as documents and helpdesk
 
 ## Documentation
 
-For contributors, maintainers, or technical review:
+Project and architecture documentation is included in the repository:
 
 - `AGENTS.md`
 - `CONTEXT.md`
@@ -195,13 +219,12 @@ For contributors, maintainers, or technical review:
 - `docs/migration-notes.md`
 - `docs/future-roadmap.md`
 
+## Frequently Asked Notes
+
+- The plugin is multilingual ready through the `teamops-hub` text domain.
+- The member experience is currently a hybrid of admin and front-end workspace flows.
+- The architecture is intentionally modular so future modules can plug into the same foundation.
+
 ## License
 
 This project is released under the MIT License. See `LICENSE`.
-
-## Notes
-
-- The plugin is multilingual ready through the `teamops-hub` text domain.
-- The current member experience is admin-first.
-- The plugin now also supports a hybrid front-end workspace through the `[teamops_hub_workspace]` shortcode.
-- The architecture is intentionally modular so future modules can plug into the same foundation.

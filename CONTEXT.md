@@ -44,6 +44,9 @@ The architecture is intentionally platform-oriented so future modules such as he
 - Dashboard shows visibility-aware counts and task summaries
 - Member `My Work` area shows assigned projects and tasks and now returns clearer task-status labels and notices
 - Front-end workspace shortcode now follows a two-level structure: a portfolio dashboard for all projects, then a selected-project workspace with tabs for overview, Kanban, tasks, milestones, and future files
+- Front-end workspace styling now uses stronger contrast and more structured information cards so the portfolio dashboard, project overview, and task detail views read more clearly during daily use
+- Front-end task cards now present task facts as read-only labeled info first, then expose the full edit form only when the user chooses to edit
+- Front-end task records are now collapsed to a summary header by default, with query-driven focus support so Kanban can open a matching task directly inside the Tasks tab
 - Settings page manages member-view strategy and task workflow statuses
 - Reports and future-modules screens are placeholders
 

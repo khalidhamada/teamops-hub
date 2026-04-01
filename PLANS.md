@@ -35,6 +35,8 @@
 - Verify front-end redirects preserve the active workspace filter after status, checklist, comment, and task-detail edits
 - Test front-end Kanban moves across all configured statuses and confirm the detailed cards stay in sync after reload
 - Test project selection, tab switching, and project-scoped task/milestone views on the new front-end workspace
+- Validate the refreshed front-end card hierarchy, compact action controls, and read-only-to-edit task detail flow on the live site
+- Validate collapsed task disclosure behavior, status-color clarity, and Kanban-to-task focus navigation on the live site
 - Confirm overdue/upcoming behavior works with closed statuses beyond the old `done` key
 - Fix any runtime issues that appear in real admin usage
 

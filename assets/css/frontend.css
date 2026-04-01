@@ -994,3 +994,564 @@
 		flex-direction: column;
 	}
 }
+
+/* Workspace polish overrides */
+.teamops-front-shell {
+	--teamops-muted: #5d6f80;
+	--teamops-line: rgba(34, 49, 63, 0.12);
+	--teamops-panel: rgba(255, 255, 255, 0.96);
+	--teamops-panel-strong: rgba(255, 255, 255, 0.99);
+	--teamops-accent-soft: rgba(31, 111, 104, 0.12);
+	--teamops-shadow: 0 24px 60px rgba(16, 24, 40, 0.08);
+	background:
+		linear-gradient(180deg, rgba(248, 250, 248, 0.98) 0%, rgba(244, 247, 245, 0.98) 100%),
+		radial-gradient(circle at top right, rgba(185, 149, 68, 0.08), transparent 28%);
+	border-color: rgba(255, 255, 255, 0.78);
+}
+
+.teamops-front-hero,
+.teamops-front-panel,
+.teamops-front-task,
+.teamops-front-metrics div,
+.teamops-front-project-card,
+.teamops-front-milestone-card {
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 251, 250, 0.96) 100%);
+	border-color: rgba(27, 42, 58, 0.1);
+	box-shadow: 0 16px 40px rgba(16, 24, 40, 0.06);
+}
+
+.teamops-front-hero {
+	padding: 22px 24px;
+	border-color: rgba(27, 42, 58, 0.08);
+}
+
+.teamops-front-metrics div {
+	position: relative;
+	overflow: hidden;
+	padding: 16px 18px;
+}
+
+.teamops-front-metrics div::after {
+	content: "";
+	position: absolute;
+	inset: auto 14px 0 14px;
+	height: 3px;
+	border-radius: 999px;
+	background: linear-gradient(90deg, var(--teamops-accent) 0%, rgba(31, 111, 104, 0.18) 100%);
+}
+
+.teamops-front-project-card,
+.teamops-front-milestone-card,
+.teamops-front-task,
+.teamops-front-tab,
+.teamops-front-kanban-card {
+	transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.teamops-front-project-card:hover,
+.teamops-front-milestone-card:hover,
+.teamops-front-tab:hover,
+.teamops-front-kanban-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 18px 34px rgba(16, 24, 40, 0.08);
+}
+
+.teamops-front-project-priority,
+.teamops-front-project-statusline span,
+.teamops-front-mini-pill,
+.teamops-front-task-meta span,
+.teamops-front-kanban-meta span {
+	border: 1px solid rgba(27, 42, 58, 0.08);
+}
+
+.teamops-front-project-priority,
+.teamops-front-project-statusline span {
+	background: rgba(240, 244, 246, 0.95);
+	color: #486070;
+}
+
+.teamops-front-project-card-head,
+.teamops-front-project-heading {
+	gap: 18px;
+}
+
+.teamops-front-project-card {
+	padding: 18px;
+}
+
+.teamops-front-project-card-note {
+	color: var(--teamops-muted);
+}
+
+.teamops-front-project-link {
+	letter-spacing: 0.01em;
+}
+
+.teamops-front-project-header {
+	padding: 22px;
+}
+
+.teamops-front-metrics-quad,
+.teamops-front-project-metrics {
+	grid-template-columns: repeat(4, minmax(150px, 1fr));
+}
+
+.teamops-front-tabs {
+	gap: 12px;
+}
+
+.teamops-front-tab {
+	padding: 11px 16px;
+	background: rgba(255, 255, 255, 0.96);
+	color: #516577;
+	box-shadow: 0 8px 20px rgba(16, 24, 40, 0.04);
+}
+
+.teamops-front-tab.is-active {
+	box-shadow: 0 14px 24px rgba(31, 111, 104, 0.22);
+}
+
+.teamops-front-overview-card {
+	padding: 20px;
+}
+
+.teamops-front-detail-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.teamops-front-detail-card,
+.teamops-front-task-info {
+	display: grid;
+	gap: 6px;
+	padding: 14px 15px;
+	border-radius: 16px;
+	background: linear-gradient(180deg, rgba(245, 248, 247, 0.9) 0%, rgba(255, 255, 255, 0.96) 100%);
+	border: 1px solid rgba(27, 42, 58, 0.08);
+}
+
+.teamops-front-detail-card span,
+.teamops-front-task-info span {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-detail-card strong,
+.teamops-front-task-info strong {
+	font-size: 15px;
+	line-height: 1.3;
+	color: var(--teamops-ink);
+}
+
+.teamops-front-people-grid,
+.teamops-front-mini-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 10px;
+}
+
+.teamops-front-people-grid li,
+.teamops-front-mini-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: center;
+	padding: 12px 14px;
+	border-radius: 16px;
+	background: rgba(245, 248, 247, 0.82);
+	border: 1px solid rgba(27, 42, 58, 0.08);
+}
+
+.teamops-front-people-grid li > div,
+.teamops-front-mini-list li > div {
+	display: grid;
+	gap: 2px;
+}
+
+.teamops-front-people-grid strong,
+.teamops-front-mini-list strong {
+	font-size: 14px;
+	color: var(--teamops-ink);
+}
+
+.teamops-front-people-grid small,
+.teamops-front-mini-list small {
+	font-size: 12px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-person-mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 38px;
+	height: 38px;
+	border-radius: 999px;
+	background: linear-gradient(135deg, var(--teamops-accent) 0%, #6ea89f 100%);
+	color: #fff;
+	font-size: 12px;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+	flex: 0 0 38px;
+}
+
+.teamops-front-mini-pill {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	font-size: 12px;
+	font-weight: 700;
+	color: #4c6172;
+	white-space: nowrap;
+}
+
+.teamops-front-task {
+	padding: 22px;
+	gap: 14px;
+}
+
+.teamops-front-task-head,
+.teamops-front-task-actions {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 14px;
+	align-items: start;
+}
+
+.teamops-front-task-project {
+	margin-bottom: 8px;
+	letter-spacing: 0.16em;
+}
+
+.teamops-front-task h3 {
+	max-width: 24ch;
+}
+
+.teamops-front-task-badge {
+	padding: 9px 14px;
+	background: linear-gradient(180deg, rgba(230, 244, 241, 0.98) 0%, rgba(242, 250, 248, 0.96) 100%);
+	border: 1px solid rgba(31, 111, 104, 0.12);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.teamops-front-task-meta {
+	gap: 10px;
+	margin-top: 0;
+}
+
+.teamops-front-task-meta span {
+	padding: 7px 11px;
+	background: rgba(244, 247, 248, 0.94);
+	color: #526576;
+}
+
+.teamops-front-task-meta .is-status {
+	background: linear-gradient(180deg, rgba(230, 244, 241, 0.98) 0%, rgba(242, 250, 248, 0.96) 100%);
+	border-color: rgba(31, 111, 104, 0.14);
+	color: var(--teamops-accent);
+}
+
+.teamops-front-progress {
+	margin: 0;
+	height: 8px;
+	background: rgba(34, 49, 63, 0.09);
+}
+
+.teamops-front-copy {
+	margin: 0;
+	padding: 14px 16px;
+	max-width: none;
+	border-radius: 16px;
+	background: rgba(247, 249, 248, 0.86);
+	border: 1px solid rgba(27, 42, 58, 0.08);
+}
+
+.teamops-front-task-info-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.teamops-front-task-actions {
+	margin-top: 2px;
+}
+
+.teamops-front-filters {
+	grid-template-columns: minmax(220px, 360px) auto;
+	justify-content: start;
+}
+
+.teamops-front-inline-form {
+	margin: 0;
+}
+
+.teamops-front-inline-form form {
+	grid-template-columns: minmax(180px, 220px) auto;
+	justify-content: start;
+}
+
+.teamops-front-task-editor {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.teamops-front-task-editor summary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 42px;
+	padding: 10px 16px;
+	border-radius: 999px;
+	border: 1px solid rgba(27, 42, 58, 0.08);
+	background: rgba(244, 247, 248, 0.96);
+	color: var(--teamops-ink);
+	box-shadow: 0 8px 18px rgba(16, 24, 40, 0.04);
+}
+
+.teamops-front-task-editor summary:hover,
+.teamops-front-task-editor summary:focus {
+	background: rgba(238, 243, 245, 0.98);
+}
+
+.teamops-front-task-editor[open] {
+	padding: 16px;
+	border-radius: 18px;
+	border: 1px solid rgba(27, 42, 58, 0.09);
+	background: rgba(248, 250, 249, 0.96);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.teamops-front-task-editor[open] summary {
+	margin-bottom: 14px;
+}
+
+.teamops-front-edit-form,
+.teamops-front-comment-form {
+	gap: 12px;
+}
+
+.teamops-front-comments {
+	margin-top: 4px;
+	padding-top: 18px;
+}
+
+.teamops-front-comment-list li {
+	padding: 12px 0;
+}
+
+.teamops-front-comment-form {
+	padding: 16px;
+	border-radius: 18px;
+	border: 1px solid rgba(27, 42, 58, 0.08);
+	background: rgba(247, 249, 248, 0.9);
+}
+
+.teamops-front-button {
+	padding: 10px 18px;
+	box-shadow: 0 12px 24px rgba(31, 111, 104, 0.18);
+}
+
+.teamops-front-filters .teamops-front-button,
+.teamops-front-inline-form .teamops-front-button,
+.teamops-front-edit-form .teamops-front-button,
+.teamops-front-comment-form .teamops-front-button {
+	width: auto;
+	justify-self: start;
+}
+
+.teamops-front-shell textarea {
+	min-height: 96px;
+}
+
+.teamops-front-comment-form textarea {
+	min-height: 72px;
+}
+
+.teamops-front-kanban-column {
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 9%, #ffffff);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84), 0 12px 28px rgba(16, 24, 40, 0.05);
+}
+
+.teamops-front-kanban-card {
+	padding: 13px 14px 13px 16px;
+	box-shadow: 0 10px 18px rgba(16, 24, 40, 0.06);
+}
+
+.teamops-front-kanban-card strong {
+	font-size: 14px;
+}
+
+@container (max-width: 980px) {
+	.teamops-front-metrics-quad,
+	.teamops-front-project-metrics,
+	.teamops-front-task-info-grid,
+	.teamops-front-detail-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@container (max-width: 720px) {
+	.teamops-front-task-head,
+	.teamops-front-task-actions,
+	.teamops-front-people-grid li,
+	.teamops-front-mini-list li {
+		grid-template-columns: 1fr;
+	}
+}
+
+@container (max-width: 640px) {
+	.teamops-front-metrics-quad,
+	.teamops-front-project-metrics,
+	.teamops-front-task-info-grid,
+	.teamops-front-detail-grid,
+	.teamops-front-filters,
+	.teamops-front-inline-form form {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Task disclosure and status color refinements */
+.teamops-front-status-pill {
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 12%, #ffffff) !important;
+	border-color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 24%, rgba(27, 42, 58, 0.08)) !important;
+	color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 72%, #1f2933) !important;
+}
+
+.teamops-front-task {
+	overflow: hidden;
+	padding: 0;
+	border-color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 18%, rgba(27, 42, 58, 0.1));
+}
+
+.teamops-front-task-summary {
+	list-style: none;
+	display: grid;
+	gap: 14px;
+	padding: 22px;
+	cursor: pointer;
+}
+
+.teamops-front-task-summary::-webkit-details-marker {
+	display: none;
+}
+
+.teamops-front-task-summary::marker {
+	display: none;
+}
+
+.teamops-front-task[open] .teamops-front-task-summary {
+	padding-bottom: 18px;
+	border-bottom: 1px solid rgba(27, 42, 58, 0.08);
+	background: linear-gradient(180deg, color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 7%, #ffffff) 0%, rgba(255, 255, 255, 0.92) 100%);
+}
+
+.teamops-front-task-head {
+	align-items: start;
+}
+
+.teamops-front-task-summary-side {
+	display: grid;
+	justify-items: end;
+	gap: 10px;
+}
+
+.teamops-front-task-toggle-indicator {
+	width: 14px;
+	height: 14px;
+	border-right: 2px solid color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 65%, #5d6f80);
+	border-bottom: 2px solid color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 65%, #5d6f80);
+	transform: rotate(45deg);
+	transition: transform 180ms ease;
+}
+
+.teamops-front-task[open] .teamops-front-task-toggle-indicator {
+	transform: rotate(225deg);
+}
+
+.teamops-front-task-preview {
+	margin: 10px 0 0;
+	max-width: 72ch;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-task-meta {
+	margin-top: 2px;
+}
+
+.teamops-front-task-meta .is-status {
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 14%, #ffffff);
+	border-color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 26%, rgba(27, 42, 58, 0.08));
+	color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 72%, #1f2933);
+}
+
+.teamops-front-progress span {
+	background: linear-gradient(90deg, var(--teamops-status-accent, var(--teamops-accent)) 0%, color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 40%, #9ac8bf) 100%);
+}
+
+.teamops-front-task-body {
+	display: grid;
+	gap: 16px;
+	padding: 18px 22px 22px;
+}
+
+.teamops-front-copy {
+	margin-top: 2px;
+}
+
+.teamops-front-task-actions {
+	align-items: center;
+}
+
+.teamops-front-task-editor summary {
+	color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 70%, #1f2933);
+}
+
+.teamops-front-task-editor[open] {
+	border-color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 18%, rgba(27, 42, 58, 0.09));
+}
+
+.teamops-front-kanban-card {
+	cursor: grab;
+}
+
+.teamops-front-kanban-open {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 4px;
+	min-height: 34px;
+	padding: 8px 12px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 12%, #ffffff);
+	border: 1px solid color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 20%, rgba(27, 42, 58, 0.08));
+	color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 72%, #1f2933) !important;
+	font-size: 12px;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.teamops-front-kanban-open:hover,
+.teamops-front-kanban-open:focus {
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 18%, #ffffff);
+}
+
+@container (max-width: 720px) {
+	.teamops-front-task-summary,
+	.teamops-front-task-body {
+		padding-inline: 16px;
+	}
+
+	.teamops-front-task-summary-side {
+		justify-items: start;
+	}
+}

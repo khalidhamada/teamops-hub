@@ -1,4 +1,31 @@
 (function () {
+	const focusTaskFromUrl = () => {
+		const params = new URLSearchParams(window.location.search);
+		const focusedTaskId = params.get('teamops_task');
+		const hashId = window.location.hash ? window.location.hash.replace('#teamops-task-', '') : '';
+		const taskId = focusedTaskId || hashId;
+
+		if (!taskId) {
+			return;
+		}
+
+		const taskCard = document.querySelector('[data-task-card][data-task-id="' + taskId + '"]');
+
+		if (!taskCard) {
+			return;
+		}
+
+		if (taskCard.tagName === 'DETAILS') {
+			taskCard.open = true;
+		}
+
+		window.requestAnimationFrame(() => {
+			taskCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		});
+	};
+
+	focusTaskFromUrl();
+
 	if (typeof window.teamopsHubWorkspace === 'undefined') {
 		return;
 	}

@@ -53,11 +53,13 @@ class WorkspaceShortcode {
 		$selected_project_id = absint( $_GET['teamops_project'] ?? 0 );
 		$active_tab = sanitize_key( $_GET['teamops_tab'] ?? ( $selected_project_id ? 'overview' : 'dashboard' ) );
 		$status_filter = sanitize_key( $_GET['teamops_status'] ?? '' );
+		$focused_task_id = absint( $_GET['teamops_task'] ?? 0 );
 		$is_manager = current_user_can( 'teamops_manage_tasks' ) || current_user_can( 'manage_options' );
 		$projects = $this->projects->get_projects();
 		$project_lookup = $this->project_map( $projects );
 		$options = $this->tasks->form_options();
 		$status_rows = $this->tasks->status_definitions();
+		$status_map = $this->task_status_map( $status_rows );
 		$all_tasks = $this->tasks->get_tasks();
 		$notifications = $this->notifications->recent_for_current_user( 8 );
 		$unread_count = $this->notifications->unread_count_for_current_user();
@@ -75,6 +77,7 @@ class WorkspaceShortcode {
 				'teamops_project' => $selected_project_id,
 				'teamops_tab' => $active_tab,
 				'teamops_status' => $status_filter,
+				'teamops_task' => $focused_task_id,
 			)
 		);
 
@@ -113,7 +116,7 @@ class WorkspaceShortcode {
 			<?php if ( ! $selected_project_id ) : ?>
 				<?php echo $this->render_dashboard_view( $portfolio_stats, $project_cards, $notifications, $unread_count ); ?>
 			<?php else : ?>
-				<?php echo $this->render_project_view( $selected_project, $project_stats, $selected_members, $selected_milestones, $selected_tasks, $kanban_columns, $options, $project_lookup, $current_url, $active_tab, $status_filter, $is_manager ); ?>
+				<?php echo $this->render_project_view( $selected_project, $project_stats, $selected_members, $selected_milestones, $selected_tasks, $kanban_columns, $options, $project_lookup, $status_map, $current_url, $active_tab, $status_filter, $focused_task_id, $is_manager ); ?>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -177,7 +180,7 @@ class WorkspaceShortcode {
 		<?php
 		return ob_get_clean();
 	}
-	private function render_project_view( array $project, array $project_stats, array $members, array $milestones, array $tasks, array $kanban_columns, array $options, array $project_lookup, $current_url, $active_tab, $status_filter, $is_manager ) {
+	private function render_project_view( array $project, array $project_stats, array $members, array $milestones, array $tasks, array $kanban_columns, array $options, array $project_lookup, array $status_map, $current_url, $active_tab, $status_filter, $focused_task_id, $is_manager ) {
 		ob_start();
 		?>
 		<section class="teamops-front-project-header teamops-front-panel">
@@ -188,7 +191,7 @@ class WorkspaceShortcode {
 					<h2><?php echo esc_html( $project['title'] ); ?></h2>
 					<?php if ( ! empty( $project['description'] ) ) : ?><p class="teamops-front-project-summary"><?php echo esc_html( wp_strip_all_tags( $project['description'] ) ); ?></p><?php endif; ?>
 				</div>
-				<div class="teamops-front-project-statusline"><span><?php echo esc_html( ucfirst( str_replace( '_', ' ', $project['status'] ) ) ); ?></span><span><?php echo esc_html( ucfirst( $project['priority'] ) ); ?></span></div>
+				<div class="teamops-front-project-statusline"><span class="teamops-front-status-pill" style="<?php echo esc_attr( '--teamops-status-accent:' . $this->state_color( 'project', $project['status'] ) . ';' ); ?>"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $project['status'] ) ) ); ?></span><span><?php echo esc_html( ucfirst( $project['priority'] ) ); ?></span></div>
 			</div>
 			<div class="teamops-front-metrics teamops-front-project-metrics">
 				<div><span><?php esc_html_e( 'Progress', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $project_stats['progress'] ); ?>%</strong></div>
@@ -206,27 +209,89 @@ class WorkspaceShortcode {
 
 		<?php if ( 'overview' === $active_tab ) : ?>
 			<div class="teamops-front-overview-grid">
-				<section class="teamops-front-panel">
-					<h3><?php esc_html_e( 'Project Details', 'teamops-hub' ); ?></h3>
-					<ul class="teamops-front-overview-list">
-						<li><span><?php esc_html_e( 'Status', 'teamops-hub' ); ?></span><strong><?php echo esc_html( ucfirst( str_replace( '_', ' ', $project['status'] ) ) ); ?></strong></li>
-						<li><span><?php esc_html_e( 'Priority', 'teamops-hub' ); ?></span><strong><?php echo esc_html( ucfirst( $project['priority'] ) ); ?></strong></li>
-						<li><span><?php esc_html_e( 'Start Date', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $project['start_date'] ?: __( 'Not set', 'teamops-hub' ) ); ?></strong></li>
-						<li><span><?php esc_html_e( 'Due Date', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $project['due_date'] ?: __( 'Not set', 'teamops-hub' ) ); ?></strong></li>
-						<li><span><?php esc_html_e( 'Team Members', 'teamops-hub' ); ?></span><strong><?php echo esc_html( count( $members ) ); ?></strong></li>
-					</ul>
+				<section class="teamops-front-panel teamops-front-overview-card">
+					<div class="teamops-front-panel-head">
+						<div>
+							<h3><?php esc_html_e( 'Project Details', 'teamops-hub' ); ?></h3>
+							<p><?php esc_html_e( 'Core project settings and delivery signals at a glance.', 'teamops-hub' ); ?></p>
+						</div>
+					</div>
+					<div class="teamops-front-detail-grid">
+						<article class="teamops-front-detail-card"><span><?php esc_html_e( 'Status', 'teamops-hub' ); ?></span><strong><?php echo esc_html( ucfirst( str_replace( '_', ' ', $project['status'] ) ) ); ?></strong></article>
+						<article class="teamops-front-detail-card"><span><?php esc_html_e( 'Priority', 'teamops-hub' ); ?></span><strong><?php echo esc_html( ucfirst( $project['priority'] ) ); ?></strong></article>
+						<article class="teamops-front-detail-card"><span><?php esc_html_e( 'Start Date', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $project['start_date'] ?: __( 'Not set', 'teamops-hub' ) ); ?></strong></article>
+						<article class="teamops-front-detail-card"><span><?php esc_html_e( 'Due Date', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $project['due_date'] ?: __( 'Not set', 'teamops-hub' ) ); ?></strong></article>
+						<article class="teamops-front-detail-card"><span><?php esc_html_e( 'Team Members', 'teamops-hub' ); ?></span><strong><?php echo esc_html( count( $members ) ); ?></strong></article>
+					</div>
 				</section>
-				<section class="teamops-front-panel">
-					<h3><?php esc_html_e( 'Team', 'teamops-hub' ); ?></h3>
-					<?php if ( empty( $members ) ) : ?><p><?php esc_html_e( 'No team members are assigned yet.', 'teamops-hub' ); ?></p><?php else : ?><ul class="teamops-front-people-list"><?php foreach ( $members as $member ) : ?><li><?php echo esc_html( $member->display_name ); ?></li><?php endforeach; ?></ul><?php endif; ?>
+				<section class="teamops-front-panel teamops-front-overview-card">
+					<div class="teamops-front-panel-head">
+						<div>
+							<h3><?php esc_html_e( 'Team', 'teamops-hub' ); ?></h3>
+							<p><?php esc_html_e( 'Everyone currently attached to this project workspace.', 'teamops-hub' ); ?></p>
+						</div>
+					</div>
+					<?php if ( empty( $members ) ) : ?>
+						<p><?php esc_html_e( 'No team members are assigned yet.', 'teamops-hub' ); ?></p>
+					<?php else : ?>
+						<ul class="teamops-front-people-grid">
+							<?php foreach ( $members as $member ) : ?>
+								<li>
+									<span class="teamops-front-person-mark"><?php echo esc_html( $this->initials( $member->display_name ) ); ?></span>
+									<div>
+										<strong><?php echo esc_html( $member->display_name ); ?></strong>
+										<small><?php esc_html_e( 'Project member', 'teamops-hub' ); ?></small>
+									</div>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
 				</section>
-				<section class="teamops-front-panel">
-					<h3><?php esc_html_e( 'Milestone Snapshot', 'teamops-hub' ); ?></h3>
-					<?php if ( empty( $milestones ) ) : ?><p><?php esc_html_e( 'No milestones yet.', 'teamops-hub' ); ?></p><?php else : ?><ul class="teamops-front-overview-list"><?php foreach ( array_slice( $milestones, 0, 4 ) as $milestone ) : ?><li><span><?php echo esc_html( $milestone['title'] ); ?></span><strong><?php echo esc_html( ucfirst( str_replace( '_', ' ', $milestone['status'] ) ) ); ?></strong></li><?php endforeach; ?></ul><?php endif; ?>
+				<section class="teamops-front-panel teamops-front-overview-card">
+					<div class="teamops-front-panel-head">
+						<div>
+							<h3><?php esc_html_e( 'Milestone Snapshot', 'teamops-hub' ); ?></h3>
+							<p><?php esc_html_e( 'Current checkpoints and their latest states.', 'teamops-hub' ); ?></p>
+						</div>
+					</div>
+					<?php if ( empty( $milestones ) ) : ?>
+						<p><?php esc_html_e( 'No milestones yet.', 'teamops-hub' ); ?></p>
+					<?php else : ?>
+						<ul class="teamops-front-mini-list">
+							<?php foreach ( array_slice( $milestones, 0, 4 ) as $milestone ) : ?>
+								<li>
+									<div>
+										<strong><?php echo esc_html( $milestone['title'] ); ?></strong>
+										<small><?php echo esc_html( $milestone['due_date'] ?: __( 'No due date', 'teamops-hub' ) ); ?></small>
+									</div>
+									<span class="teamops-front-mini-pill teamops-front-status-pill" style="<?php echo esc_attr( '--teamops-status-accent:' . $this->state_color( 'milestone', $milestone['status'] ) . ';' ); ?>"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $milestone['status'] ) ) ); ?></span>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
 				</section>
-				<section class="teamops-front-panel">
-					<h3><?php esc_html_e( 'Recent Work', 'teamops-hub' ); ?></h3>
-					<?php if ( empty( $tasks ) ) : ?><p><?php esc_html_e( 'No tasks for this project yet.', 'teamops-hub' ); ?></p><?php else : ?><ul class="teamops-front-overview-list"><?php foreach ( array_slice( $tasks, 0, 4 ) as $task ) : ?><li><span><?php echo esc_html( $task['title'] ); ?></span><strong><?php echo esc_html( $task['status_label'] ); ?></strong></li><?php endforeach; ?></ul><?php endif; ?>
+				<section class="teamops-front-panel teamops-front-overview-card">
+					<div class="teamops-front-panel-head">
+						<div>
+							<h3><?php esc_html_e( 'Recent Work', 'teamops-hub' ); ?></h3>
+							<p><?php esc_html_e( 'The latest tasks in this project, ready for follow-up.', 'teamops-hub' ); ?></p>
+						</div>
+					</div>
+					<?php if ( empty( $tasks ) ) : ?>
+						<p><?php esc_html_e( 'No tasks for this project yet.', 'teamops-hub' ); ?></p>
+					<?php else : ?>
+						<ul class="teamops-front-mini-list">
+							<?php foreach ( array_slice( $tasks, 0, 4 ) as $task ) : ?>
+								<li>
+									<div>
+										<strong><?php echo esc_html( $task['title'] ); ?></strong>
+										<small><?php echo esc_html( $task['due_date'] ?: __( 'No due date', 'teamops-hub' ) ); ?></small>
+									</div>
+									<span class="teamops-front-mini-pill teamops-front-status-pill" style="<?php echo esc_attr( '--teamops-status-accent:' . $this->task_status_style( $status_map, $task['status'] ) . ';' ); ?>"><?php echo esc_html( $task['status_label'] ); ?></span>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
 				</section>
 			</div>
 		<?php elseif ( 'kanban' === $active_tab ) : ?>
@@ -242,7 +307,7 @@ class WorkspaceShortcode {
 								<?php else : ?>
 									<?php foreach ( $column['tasks'] as $task ) : ?>
 										<?php $task_checklist = $task['checklist_summary']; ?>
-										<a class="teamops-front-kanban-card" href="<?php echo esc_url( $this->workspace_url( array( 'teamops_project' => (int) $project['id'], 'teamops_tab' => 'tasks' ) ) ); ?>#teamops-task-<?php echo esc_attr( $task['id'] ); ?>" draggable="true" data-task-id="<?php echo esc_attr( $task['id'] ); ?>" data-status-key="<?php echo esc_attr( $column['key'] ); ?>"><strong><?php echo esc_html( $task['title'] ); ?></strong><span><?php echo esc_html( $project_lookup[ (int) $task['project_id'] ] ?? __( 'Project', 'teamops-hub' ) ); ?></span><div class="teamops-front-kanban-meta"><?php if ( ! empty( $task['due_date'] ) ) : ?><span><?php echo esc_html( $task['due_date'] ); ?></span><?php endif; ?><span><?php echo esc_html( sprintf( __( '%1$d/%2$d checklist', 'teamops-hub' ), (int) $task_checklist['completed'], (int) $task_checklist['total'] ) ); ?></span></div></a>
+										<article class="teamops-front-kanban-card" draggable="true" data-task-id="<?php echo esc_attr( $task['id'] ); ?>" data-status-key="<?php echo esc_attr( $column['key'] ); ?>"><strong><?php echo esc_html( $task['title'] ); ?></strong><span><?php echo esc_html( $project_lookup[ (int) $task['project_id'] ] ?? __( 'Project', 'teamops-hub' ) ); ?></span><div class="teamops-front-kanban-meta"><?php if ( ! empty( $task['due_date'] ) ) : ?><span><?php echo esc_html( $task['due_date'] ); ?></span><?php endif; ?><span><?php echo esc_html( sprintf( __( '%1$d/%2$d checklist', 'teamops-hub' ), (int) $task_checklist['completed'], (int) $task_checklist['total'] ) ); ?></span></div><a class="teamops-front-kanban-open" draggable="false" href="<?php echo esc_url( $this->workspace_url( array( 'teamops_project' => (int) $project['id'], 'teamops_tab' => 'tasks', 'teamops_task' => (int) $task['id'] ) ) ); ?>#teamops-task-<?php echo esc_attr( $task['id'] ); ?>"><?php esc_html_e( 'View task', 'teamops-hub' ); ?></a></article>
 									<?php endforeach; ?>
 								<?php endif; ?>
 							</div>
@@ -263,7 +328,7 @@ class WorkspaceShortcode {
 			<?php if ( empty( $tasks ) ) : ?>
 				<section class="teamops-front-panel"><p><?php esc_html_e( 'No tasks match the current view.', 'teamops-hub' ); ?></p></section>
 			<?php else : ?>
-				<div class="teamops-front-task-stack"><?php foreach ( $tasks as $task ) : ?><?php echo $this->render_task_card( $task, $options, $project_lookup, $current_url, $is_manager ); ?><?php endforeach; ?></div>
+				<div class="teamops-front-task-stack"><?php foreach ( $tasks as $task ) : ?><?php echo $this->render_task_card( $task, $options, $project_lookup, $status_map, $current_url, $focused_task_id, $is_manager ); ?><?php endforeach; ?></div>
 			<?php endif; ?>
 		<?php elseif ( 'milestones' === $active_tab ) : ?>
 			<section class="teamops-front-panel">
@@ -276,27 +341,167 @@ class WorkspaceShortcode {
 		<?php
 		return ob_get_clean();
 	}
-	private function render_task_card( array $task, array $options, array $project_lookup, $current_url, $is_manager ) {
+	private function render_task_card( array $task, array $options, array $project_lookup, array $status_map, $current_url, $focused_task_id, $is_manager ) {
 		$subtasks = $this->subtasks->get_subtasks( (int) $task['id'] );
 		$comments = $this->comments->get_comments( (int) $task['id'] );
 		$mention_hint = $this->comments->mention_hint( (int) $task['id'] );
 		$checklist = $task['checklist_summary'];
 		$task_milestones = $this->milestones_for_project( $options['milestones'], (int) $task['project_id'] );
 		$task_users = $this->users_for_project( $options, (int) $task['project_id'], (int) $task['assigned_user_id'] );
+		$assigned_label = $this->task_user_label( $task_users, (int) $task['assigned_user_id'] );
+		$milestone_label = $this->milestone_label( $task_milestones, (int) $task['milestone_id'] );
+		$status_accent = $this->task_status_style( $status_map, $task['status'] );
+		$is_open = (int) $focused_task_id === (int) $task['id'];
 		ob_start();
 		?>
-		<section class="teamops-front-task" id="teamops-task-<?php echo esc_attr( $task['id'] ); ?>">
-			<div class="teamops-front-task-head"><div><p class="teamops-front-task-project"><?php echo esc_html( $project_lookup[ (int) $task['project_id'] ] ?? __( 'Project', 'teamops-hub' ) ); ?></p><h3><?php echo esc_html( $task['title'] ); ?></h3></div><div class="teamops-front-task-badge"><?php echo esc_html( sprintf( __( '%1$d/%2$d checklist', 'teamops-hub' ), (int) $checklist['completed'], (int) $checklist['total'] ) ); ?></div></div>
-			<div class="teamops-front-task-meta"><span><?php echo esc_html( $task['status_label'] ); ?></span><?php if ( ! empty( $task['due_date'] ) ) : ?><span><?php echo esc_html( $task['due_date'] ); ?></span><?php endif; ?><span><?php echo esc_html( sprintf( _n( '%d comment', '%d comments', count( $comments ), 'teamops-hub' ), count( $comments ) ) ); ?></span></div>
-			<div class="teamops-front-progress" aria-hidden="true"><span style="width: <?php echo esc_attr( max( 8, (int) $checklist['percentage'] ) ); ?>%;"></span></div>
-			<?php if ( ! empty( $task['description'] ) ) : ?><div class="teamops-front-copy"><?php echo wp_kses_post( wpautop( $task['description'] ) ); ?></div><?php endif; ?>
-			<div class="teamops-front-inline-form"><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"><?php wp_nonce_field( 'teamops_hub_front_update_task_status' ); ?><input type="hidden" name="action" value="teamops_hub_front_update_task_status" /><input type="hidden" name="task_id" value="<?php echo esc_attr( $task['id'] ); ?>" /><input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" /><select name="status"><?php foreach ( $options['statuses'] as $status_value => $label ) : ?><option value="<?php echo esc_attr( $status_value ); ?>" <?php selected( $task['status'], $status_value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select><button type="submit" class="teamops-front-button"><?php esc_html_e( 'Save Status', 'teamops-hub' ); ?></button></form></div>
-			<?php if ( ! empty( $subtasks ) ) : ?><ul class="teamops-front-subtasks"><?php foreach ( $subtasks as $subtask ) : ?><li><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="teamops-front-checklist-form"><?php wp_nonce_field( 'teamops_hub_front_toggle_subtask' ); ?><input type="hidden" name="action" value="teamops_hub_front_toggle_subtask" /><input type="hidden" name="subtask_id" value="<?php echo esc_attr( $subtask['id'] ); ?>" /><input type="hidden" name="is_completed" value="<?php echo esc_attr( empty( $subtask['is_completed'] ) ? 1 : 0 ); ?>" /><input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" /><button type="submit" class="teamops-front-check-toggle <?php echo ! empty( $subtask['is_completed'] ) ? 'is-complete' : ''; ?>" aria-label="<?php echo esc_attr( ! empty( $subtask['is_completed'] ) ? __( 'Mark checklist item as open', 'teamops-hub' ) : __( 'Mark checklist item as completed', 'teamops-hub' ) ); ?>"><span class="teamops-front-check-box" aria-hidden="true"></span><span class="teamops-front-check-text <?php echo ! empty( $subtask['is_completed'] ) ? 'is-complete' : ''; ?>"><?php echo esc_html( $subtask['title'] ); ?></span></button></form></li><?php endforeach; ?></ul><?php endif; ?>
-			<details class="teamops-front-task-editor"><summary><?php esc_html_e( 'Edit Task Details', 'teamops-hub' ); ?></summary><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="teamops-front-edit-form"><?php wp_nonce_field( 'teamops_hub_front_update_task' ); ?><input type="hidden" name="action" value="teamops_hub_front_update_task" /><input type="hidden" name="task_id" value="<?php echo esc_attr( $task['id'] ); ?>" /><input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" /><div class="teamops-front-field-grid"><label><span><?php esc_html_e( 'Title', 'teamops-hub' ); ?></span><input type="text" name="title" value="<?php echo esc_attr( $task['title'] ); ?>" required /></label><label><span><?php esc_html_e( 'Priority', 'teamops-hub' ); ?></span><select name="priority"><?php foreach ( $options['priorities'] as $priority_value => $priority_label ) : ?><option value="<?php echo esc_attr( $priority_value ); ?>" <?php selected( $task['priority'], $priority_value ); ?>><?php echo esc_html( $priority_label ); ?></option><?php endforeach; ?></select></label><label><span><?php esc_html_e( 'Start Date', 'teamops-hub' ); ?></span><input type="date" name="start_date" value="<?php echo esc_attr( $task['start_date'] ); ?>" /></label><label><span><?php esc_html_e( 'Due Date', 'teamops-hub' ); ?></span><input type="date" name="due_date" value="<?php echo esc_attr( $task['due_date'] ); ?>" /></label><label><span><?php esc_html_e( 'Actual Hours', 'teamops-hub' ); ?></span><input type="number" step="0.25" min="0" name="actual_hours" value="<?php echo esc_attr( $task['actual_hours'] ); ?>" /></label><label><span><?php esc_html_e( 'Status', 'teamops-hub' ); ?></span><select name="status"><?php foreach ( $options['statuses'] as $status_value => $label ) : ?><option value="<?php echo esc_attr( $status_value ); ?>" <?php selected( $task['status'], $status_value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select></label><?php if ( $is_manager ) : ?><label><span><?php esc_html_e( 'Assigned To', 'teamops-hub' ); ?></span><select name="assigned_user_id"><?php foreach ( $task_users as $user ) : ?><option value="<?php echo esc_attr( $user->ID ); ?>" <?php selected( (int) $task['assigned_user_id'], (int) $user->ID ); ?>><?php echo esc_html( $user->display_name ); ?></option><?php endforeach; ?></select></label><label><span><?php esc_html_e( 'Milestone', 'teamops-hub' ); ?></span><select name="milestone_id"><option value="0"><?php esc_html_e( 'No Milestone', 'teamops-hub' ); ?></option><?php foreach ( $task_milestones as $milestone ) : ?><option value="<?php echo esc_attr( $milestone['id'] ); ?>" <?php selected( (int) $task['milestone_id'], (int) $milestone['id'] ); ?>><?php echo esc_html( $milestone['title'] ); ?></option><?php endforeach; ?></select></label><label><span><?php esc_html_e( 'Estimated Hours', 'teamops-hub' ); ?></span><input type="number" step="0.25" min="0" name="estimated_hours" value="<?php echo esc_attr( $task['estimated_hours'] ); ?>" /></label><?php endif; ?></div><label class="teamops-front-field-stack"><span><?php esc_html_e( 'Description', 'teamops-hub' ); ?></span><textarea name="description" rows="4"><?php echo esc_textarea( $task['description'] ); ?></textarea></label><button type="submit" class="teamops-front-button"><?php esc_html_e( 'Save Task Details', 'teamops-hub' ); ?></button></form></details>
-			<div class="teamops-front-comments"><h4><?php esc_html_e( 'Discussion', 'teamops-hub' ); ?></h4><?php if ( empty( $comments ) ) : ?><p><?php esc_html_e( 'No comments yet.', 'teamops-hub' ); ?></p><?php else : ?><ul class="teamops-front-comment-list"><?php foreach ( $comments as $comment ) : ?><li><div class="teamops-front-comment-meta"><strong><?php echo esc_html( $comment['display_name'] ?: $comment['user_login'] ); ?></strong><small><?php echo esc_html( $comment['created_at'] ); ?></small></div><div class="teamops-front-comment-body"><?php echo wp_kses_post( wpautop( esc_html( $comment['content'] ) ) ); ?></div></li><?php endforeach; ?></ul><?php endif; ?><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="teamops-front-comment-form"><?php wp_nonce_field( 'teamops_hub_front_save_comment' ); ?><input type="hidden" name="action" value="teamops_hub_front_save_comment" /><input type="hidden" name="task_id" value="<?php echo esc_attr( $task['id'] ); ?>" /><input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" /><label for="teamops-front-comment-<?php echo esc_attr( $task['id'] ); ?>"><?php esc_html_e( 'Add Comment', 'teamops-hub' ); ?></label><textarea id="teamops-front-comment-<?php echo esc_attr( $task['id'] ); ?>" name="content" rows="3" required></textarea><?php if ( '' !== $mention_hint ) : ?><small><?php echo esc_html( sprintf( __( 'Mention teammates with: %s', 'teamops-hub' ), $mention_hint ) ); ?></small><?php endif; ?><button type="submit" class="teamops-front-button"><?php esc_html_e( 'Post Comment', 'teamops-hub' ); ?></button></form></div>
-		</section>
+		<details class="teamops-front-task" id="teamops-task-<?php echo esc_attr( $task['id'] ); ?>" data-task-card data-task-id="<?php echo esc_attr( $task['id'] ); ?>" style="<?php echo esc_attr( '--teamops-status-accent:' . $status_accent . ';' ); ?>" <?php echo $is_open ? 'open' : ''; ?>>
+			<summary class="teamops-front-task-summary">
+				<div class="teamops-front-task-head">
+					<div>
+						<p class="teamops-front-task-project"><?php echo esc_html( $project_lookup[ (int) $task['project_id'] ] ?? __( 'Project', 'teamops-hub' ) ); ?></p>
+						<h3><?php echo esc_html( $task['title'] ); ?></h3>
+						<?php if ( ! empty( $task['description'] ) ) : ?><p class="teamops-front-task-preview"><?php echo esc_html( $this->excerpt( $task['description'], 180 ) ); ?></p><?php endif; ?>
+					</div>
+					<div class="teamops-front-task-summary-side">
+						<div class="teamops-front-task-badge"><?php echo esc_html( sprintf( __( '%1$d/%2$d checklist', 'teamops-hub' ), (int) $checklist['completed'], (int) $checklist['total'] ) ); ?></div>
+						<span class="teamops-front-task-toggle-indicator" aria-hidden="true"></span>
+					</div>
+				</div>
+				<div class="teamops-front-task-meta">
+					<span class="teamops-front-status-pill is-status"><?php echo esc_html( $task['status_label'] ); ?></span>
+					<span><?php echo esc_html( $assigned_label ); ?></span>
+					<?php if ( ! empty( $task['due_date'] ) ) : ?><span><?php echo esc_html( $task['due_date'] ); ?></span><?php endif; ?>
+					<span><?php echo esc_html( sprintf( _n( '%d comment', '%d comments', count( $comments ), 'teamops-hub' ), count( $comments ) ) ); ?></span>
+					<span><?php echo esc_html( ucfirst( $task['priority'] ) ); ?></span>
+				</div>
+				<div class="teamops-front-progress" aria-hidden="true"><span style="width: <?php echo esc_attr( max( 8, (int) $checklist['percentage'] ) ); ?>%;"></span></div>
+			</summary>
+			<div class="teamops-front-task-body">
+				<?php if ( ! empty( $task['description'] ) ) : ?><div class="teamops-front-copy"><?php echo wp_kses_post( wpautop( $task['description'] ) ); ?></div><?php endif; ?>
+				<div class="teamops-front-task-info-grid">
+					<div class="teamops-front-task-info"><span><?php esc_html_e( 'Assignee', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $assigned_label ); ?></strong></div>
+					<div class="teamops-front-task-info"><span><?php esc_html_e( 'Milestone', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $milestone_label ); ?></strong></div>
+					<div class="teamops-front-task-info"><span><?php esc_html_e( 'Start Date', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $task['start_date'] ?: __( 'Not set', 'teamops-hub' ) ); ?></strong></div>
+					<div class="teamops-front-task-info"><span><?php esc_html_e( 'Due Date', 'teamops-hub' ); ?></span><strong><?php echo esc_html( $task['due_date'] ?: __( 'Not set', 'teamops-hub' ) ); ?></strong></div>
+					<div class="teamops-front-task-info"><span><?php esc_html_e( 'Estimated Hours', 'teamops-hub' ); ?></span><strong><?php echo esc_html( '' !== (string) $task['estimated_hours'] ? $task['estimated_hours'] : __( 'Not set', 'teamops-hub' ) ); ?></strong></div>
+					<div class="teamops-front-task-info"><span><?php esc_html_e( 'Actual Hours', 'teamops-hub' ); ?></span><strong><?php echo esc_html( '' !== (string) $task['actual_hours'] ? $task['actual_hours'] : __( 'Not set', 'teamops-hub' ) ); ?></strong></div>
+				</div>
+				<div class="teamops-front-task-actions">
+					<div class="teamops-front-inline-form">
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+							<?php wp_nonce_field( 'teamops_hub_front_update_task_status' ); ?>
+							<input type="hidden" name="action" value="teamops_hub_front_update_task_status" />
+							<input type="hidden" name="task_id" value="<?php echo esc_attr( $task['id'] ); ?>" />
+							<input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" />
+							<select name="status"><?php foreach ( $options['statuses'] as $status_value => $label ) : ?><option value="<?php echo esc_attr( $status_value ); ?>" <?php selected( $task['status'], $status_value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select>
+							<button type="submit" class="teamops-front-button"><?php esc_html_e( 'Save Status', 'teamops-hub' ); ?></button>
+						</form>
+					</div>
+					<details class="teamops-front-task-editor">
+						<summary><?php esc_html_e( 'Edit Task Details', 'teamops-hub' ); ?></summary>
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="teamops-front-edit-form"><?php wp_nonce_field( 'teamops_hub_front_update_task' ); ?><input type="hidden" name="action" value="teamops_hub_front_update_task" /><input type="hidden" name="task_id" value="<?php echo esc_attr( $task['id'] ); ?>" /><input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" /><div class="teamops-front-field-grid"><label><span><?php esc_html_e( 'Title', 'teamops-hub' ); ?></span><input type="text" name="title" value="<?php echo esc_attr( $task['title'] ); ?>" required /></label><label><span><?php esc_html_e( 'Priority', 'teamops-hub' ); ?></span><select name="priority"><?php foreach ( $options['priorities'] as $priority_value => $priority_label ) : ?><option value="<?php echo esc_attr( $priority_value ); ?>" <?php selected( $task['priority'], $priority_value ); ?>><?php echo esc_html( $priority_label ); ?></option><?php endforeach; ?></select></label><label><span><?php esc_html_e( 'Start Date', 'teamops-hub' ); ?></span><input type="date" name="start_date" value="<?php echo esc_attr( $task['start_date'] ); ?>" /></label><label><span><?php esc_html_e( 'Due Date', 'teamops-hub' ); ?></span><input type="date" name="due_date" value="<?php echo esc_attr( $task['due_date'] ); ?>" /></label><label><span><?php esc_html_e( 'Actual Hours', 'teamops-hub' ); ?></span><input type="number" step="0.25" min="0" name="actual_hours" value="<?php echo esc_attr( $task['actual_hours'] ); ?>" /></label><label><span><?php esc_html_e( 'Status', 'teamops-hub' ); ?></span><select name="status"><?php foreach ( $options['statuses'] as $status_value => $label ) : ?><option value="<?php echo esc_attr( $status_value ); ?>" <?php selected( $task['status'], $status_value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select></label><?php if ( $is_manager ) : ?><label><span><?php esc_html_e( 'Assigned To', 'teamops-hub' ); ?></span><select name="assigned_user_id"><?php foreach ( $task_users as $user ) : ?><option value="<?php echo esc_attr( $user->ID ); ?>" <?php selected( (int) $task['assigned_user_id'], (int) $user->ID ); ?>><?php echo esc_html( $user->display_name ); ?></option><?php endforeach; ?></select></label><label><span><?php esc_html_e( 'Milestone', 'teamops-hub' ); ?></span><select name="milestone_id"><option value="0"><?php esc_html_e( 'No Milestone', 'teamops-hub' ); ?></option><?php foreach ( $task_milestones as $milestone ) : ?><option value="<?php echo esc_attr( $milestone['id'] ); ?>" <?php selected( (int) $task['milestone_id'], (int) $milestone['id'] ); ?>><?php echo esc_html( $milestone['title'] ); ?></option><?php endforeach; ?></select></label><label><span><?php esc_html_e( 'Estimated Hours', 'teamops-hub' ); ?></span><input type="number" step="0.25" min="0" name="estimated_hours" value="<?php echo esc_attr( $task['estimated_hours'] ); ?>" /></label><?php endif; ?></div><label class="teamops-front-field-stack"><span><?php esc_html_e( 'Description', 'teamops-hub' ); ?></span><textarea name="description" rows="4"><?php echo esc_textarea( $task['description'] ); ?></textarea></label><button type="submit" class="teamops-front-button"><?php esc_html_e( 'Save Task Details', 'teamops-hub' ); ?></button></form>
+					</details>
+				</div>
+				<?php if ( ! empty( $subtasks ) ) : ?><ul class="teamops-front-subtasks"><?php foreach ( $subtasks as $subtask ) : ?><li><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="teamops-front-checklist-form"><?php wp_nonce_field( 'teamops_hub_front_toggle_subtask' ); ?><input type="hidden" name="action" value="teamops_hub_front_toggle_subtask" /><input type="hidden" name="subtask_id" value="<?php echo esc_attr( $subtask['id'] ); ?>" /><input type="hidden" name="is_completed" value="<?php echo esc_attr( empty( $subtask['is_completed'] ) ? 1 : 0 ); ?>" /><input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" /><button type="submit" class="teamops-front-check-toggle <?php echo ! empty( $subtask['is_completed'] ) ? 'is-complete' : ''; ?>" aria-label="<?php echo esc_attr( ! empty( $subtask['is_completed'] ) ? __( 'Mark checklist item as open', 'teamops-hub' ) : __( 'Mark checklist item as completed', 'teamops-hub' ) ); ?>"><span class="teamops-front-check-box" aria-hidden="true"></span><span class="teamops-front-check-text <?php echo ! empty( $subtask['is_completed'] ) ? 'is-complete' : ''; ?>"><?php echo esc_html( $subtask['title'] ); ?></span></button></form></li><?php endforeach; ?></ul><?php endif; ?>
+				<div class="teamops-front-comments"><h4><?php esc_html_e( 'Discussion', 'teamops-hub' ); ?></h4><?php if ( empty( $comments ) ) : ?><p><?php esc_html_e( 'No comments yet.', 'teamops-hub' ); ?></p><?php else : ?><ul class="teamops-front-comment-list"><?php foreach ( $comments as $comment ) : ?><li><div class="teamops-front-comment-meta"><strong><?php echo esc_html( $comment['display_name'] ?: $comment['user_login'] ); ?></strong><small><?php echo esc_html( $comment['created_at'] ); ?></small></div><div class="teamops-front-comment-body"><?php echo wp_kses_post( wpautop( esc_html( $comment['content'] ) ) ); ?></div></li><?php endforeach; ?></ul><?php endif; ?><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="teamops-front-comment-form"><?php wp_nonce_field( 'teamops_hub_front_save_comment' ); ?><input type="hidden" name="action" value="teamops_hub_front_save_comment" /><input type="hidden" name="task_id" value="<?php echo esc_attr( $task['id'] ); ?>" /><input type="hidden" name="redirect_url" value="<?php echo esc_url( $current_url ); ?>" /><label for="teamops-front-comment-<?php echo esc_attr( $task['id'] ); ?>"><?php esc_html_e( 'Add Comment', 'teamops-hub' ); ?></label><textarea id="teamops-front-comment-<?php echo esc_attr( $task['id'] ); ?>" name="content" rows="2" required></textarea><?php if ( '' !== $mention_hint ) : ?><small><?php echo esc_html( sprintf( __( 'Mention teammates with: %s', 'teamops-hub' ), $mention_hint ) ); ?></small><?php endif; ?><button type="submit" class="teamops-front-button"><?php esc_html_e( 'Post Comment', 'teamops-hub' ); ?></button></form></div>
+			</div>
+		</details>
 		<?php
 		return ob_get_clean();
+	}
+
+	private function task_status_map( array $statuses ) {
+		$map = array();
+
+		foreach ( $statuses as $status ) {
+			$map[ $status['status_key'] ] = $status;
+		}
+
+		return $map;
+	}
+
+	private function task_status_style( array $status_map, $status_key ) {
+		return $this->status_color( $status_map[ $status_key ]['color'] ?? '' );
+	}
+
+	private function state_color( $type, $state ) {
+		$palettes = array(
+			'project' => array(
+				'planned' => '#6b7280',
+				'active' => '#0f766e',
+				'on_hold' => '#b45309',
+				'completed' => '#166534',
+				'archived' => '#475569',
+			),
+			'milestone' => array(
+				'planned' => '#64748b',
+				'in_progress' => '#2563eb',
+				'completed' => '#15803d',
+				'blocked' => '#b91c1c',
+				'on_hold' => '#b45309',
+			),
+		);
+
+		return $palettes[ $type ][ $state ] ?? '#5b6b7b';
+	}
+
+	private function excerpt( $text, $limit = 180 ) {
+		$text = trim( wp_strip_all_tags( (string) $text ) );
+
+		if ( '' === $text ) {
+			return '';
+		}
+
+		if ( function_exists( 'mb_strimwidth' ) ) {
+			return mb_strimwidth( $text, 0, $limit, '...' );
+		}
+
+		if ( strlen( $text ) <= $limit ) {
+			return $text;
+		}
+
+		return substr( $text, 0, max( 0, $limit - 3 ) ) . '...';
+	}
+
+	private function task_user_label( array $users, $assigned_user_id ) {
+		foreach ( $users as $user ) {
+			if ( (int) $user->ID === (int) $assigned_user_id ) {
+				return $user->display_name;
+			}
+		}
+
+		return __( 'Unassigned', 'teamops-hub' );
+	}
+
+	private function milestone_label( array $milestones, $milestone_id ) {
+		if ( empty( $milestone_id ) ) {
+			return __( 'No milestone', 'teamops-hub' );
+		}
+
+		foreach ( $milestones as $milestone ) {
+			if ( (int) $milestone['id'] === (int) $milestone_id ) {
+				return $milestone['title'];
+			}
+		}
+
+		return __( 'No milestone', 'teamops-hub' );
+	}
+
+	private function initials( $label ) {
+		$label = trim( wp_strip_all_tags( (string) $label ) );
+
+		if ( '' === $label ) {
+			return 'TM';
+		}
+
+		$parts = preg_split( '/\s+/', $label );
+		$letters = '';
+
+		foreach ( array_slice( $parts, 0, 2 ) as $part ) {
+			$letters .= strtoupper( function_exists( 'mb_substr' ) ? mb_substr( $part, 0, 1 ) : substr( $part, 0, 1 ) );
+		}
+
+		return $letters ?: 'TM';
 	}
 
 	public function handle_status_update() {
@@ -501,6 +706,9 @@ class WorkspaceShortcode {
 		}
 		if ( ! empty( $args['teamops_status'] ) ) {
 			$query_args['teamops_status'] = sanitize_key( $args['teamops_status'] );
+		}
+		if ( ! empty( $args['teamops_task'] ) ) {
+			$query_args['teamops_task'] = (int) $args['teamops_task'];
 		}
 		return add_query_arg( $query_args, $this->current_url() );
 	}

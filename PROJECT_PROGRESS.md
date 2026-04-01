@@ -74,3 +74,6 @@ Recent progress toward this milestone:
 - Added task discussion threads, `@mentions`, and persisted in-app mention notifications
 - Added the first shortcode-powered front-end workspace so team members and managers can execute work outside wp-admin
 - Reorganized the front-end workspace into a portfolio dashboard first, then a selected-project tabbed workspace for overview, Kanban, tasks, milestones, and future file handling
+- Polished the front-end workspace presentation with stronger card hierarchy, richer overview summaries, and denser KPI rows
+- Reframed front-end task cards so status/assignee/detail context is readable before editing, while keeping the edit form available inline on demand
+- Added a second front-end refinement pass with status-colored badges, collapsed task disclosures, and Kanban-to-task focus navigation

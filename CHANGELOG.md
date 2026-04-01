@@ -46,6 +46,12 @@
 - Added front-end asset cache-busting based on file modification time so workspace CSS/JS updates appear reliably during iterative testing
 - Reorganized the front-end workspace into a portfolio-first dashboard with project-specific tabs for overview, Kanban, tasks, milestones, and future files
 - Added an MIT `LICENSE` file and repository-ready publishing metadata in the README
+- Refined the front-end portfolio dashboard and project workspace with stronger card contrast, denser four-up KPI rows on wide screens, richer overview cards, and tighter tab/card styling
+- Reworked front-end task cards so key details are readable as labeled info by default, with assignee surfaced in the task header and edit controls revealed on demand
+- Tightened front-end task filters, status actions, and comment composer sizing so workspace controls no longer stretch awkwardly across the full card width
+- Added status-colored task, milestone, and project status pills in the front-end workspace for faster visual scanning
+- Reworked front-end task cards into collapsed-by-default disclosures with cleaner header spacing and on-demand expansion for details
+- Added a Kanban "View task" action that jumps into the Tasks tab, expands the matching task, and scrolls it into focus
 
 ### Verified
 
