@@ -195,6 +195,10 @@ For contributors, maintainers, or technical review:
 - `docs/migration-notes.md`
 - `docs/future-roadmap.md`
 
+## License
+
+This project is released under the MIT License. See `LICENSE`.
+
 ## Notes
 
 - The plugin is multilingual ready through the `teamops-hub` text domain.

@@ -45,6 +45,7 @@
 - Refined the front-end Kanban board to use full workspace width and subtle status-based color accents sourced from configured workflow statuses
 - Added front-end asset cache-busting based on file modification time so workspace CSS/JS updates appear reliably during iterative testing
 - Reorganized the front-end workspace into a portfolio-first dashboard with project-specific tabs for overview, Kanban, tasks, milestones, and future files
+- Added an MIT `LICENSE` file and repository-ready publishing metadata in the README
 
 ### Verified
 
