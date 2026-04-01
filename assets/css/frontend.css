@@ -1,0 +1,996 @@
+.teamops-front-shell {
+	--teamops-ink: var(--wp--preset--color--contrast, #1f2933);
+	--teamops-muted: #607081;
+	--teamops-line: rgba(31, 41, 51, 0.1);
+	--teamops-panel: rgba(255, 255, 255, 0.92);
+	--teamops-panel-strong: rgba(255, 255, 255, 0.98);
+	--teamops-accent: var(--wp--preset--color--primary, #1f6f68);
+	--teamops-accent-soft: rgba(31, 111, 104, 0.1);
+	--teamops-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+	--teamops-radius: 18px;
+	--teamops-radius-small: 12px;
+	box-sizing: border-box;
+	container-type: inline-size;
+	width: min(100%, 1120px);
+	margin: 24px auto;
+	padding: clamp(16px, 2.4vw, 24px);
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	border-radius: 24px;
+	background: linear-gradient(180deg, rgba(246, 249, 247, 0.94) 0%, rgba(250, 249, 246, 0.98) 100%);
+	box-shadow: var(--teamops-shadow);
+	color: var(--teamops-ink);
+	font-family: var(--wp--preset--font-family--body, inherit);
+}
+
+.teamops-front-shell *,
+.teamops-front-shell *::before,
+.teamops-front-shell *::after {
+	box-sizing: border-box;
+}
+
+.teamops-front-shell h2,
+.teamops-front-shell h3,
+.teamops-front-shell h4,
+.teamops-front-shell p,
+.teamops-front-shell small,
+.teamops-front-shell span,
+.teamops-front-shell strong,
+.teamops-front-shell label,
+.teamops-front-shell button,
+.teamops-front-shell input,
+.teamops-front-shell select,
+.teamops-front-shell textarea {
+	font-family: inherit;
+}
+
+.teamops-front-shell h2,
+.teamops-front-shell h3,
+.teamops-front-shell h4 {
+	margin: 0;
+	letter-spacing: -0.02em;
+	color: var(--teamops-ink);
+}
+
+.teamops-front-shell p,
+.teamops-front-shell li,
+.teamops-front-shell label,
+.teamops-front-shell small {
+	font-size: 14px;
+	line-height: 1.55;
+}
+
+.teamops-front-hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 16px;
+	padding: 18px 20px;
+	margin-bottom: 18px;
+	border-radius: 22px;
+	background:
+		radial-gradient(circle at top left, rgba(31, 111, 104, 0.1), transparent 35%),
+		radial-gradient(circle at top right, rgba(192, 153, 72, 0.12), transparent 24%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 248, 245, 0.9) 100%);
+	border: 1px solid rgba(31, 41, 51, 0.06);
+}
+
+.teamops-front-kicker {
+	margin: 0 0 6px;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.16em;
+	color: var(--teamops-accent);
+}
+
+.teamops-front-hero h2 {
+	margin-bottom: 8px;
+	font-size: clamp(24px, 4.2cqi, 34px);
+	line-height: 1.05;
+	max-width: 14ch;
+}
+
+.teamops-front-hero > div:first-child > p:last-child {
+	max-width: 48ch;
+	margin: 0;
+	font-size: 15px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-metrics {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 10px;
+}
+
+.teamops-front-metrics div,
+.teamops-front-panel,
+.teamops-front-task {
+	background: var(--teamops-panel);
+	border: 1px solid rgba(31, 41, 51, 0.08);
+	border-radius: var(--teamops-radius);
+}
+
+.teamops-front-metrics div {
+	padding: 14px 16px;
+	background: var(--teamops-panel-strong);
+}
+
+.teamops-front-metrics span {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-metrics strong {
+	display: block;
+	font-size: clamp(20px, 3.2cqi, 28px);
+	line-height: 1;
+}
+
+.teamops-front-notice {
+	margin-bottom: 14px;
+	padding: 12px 16px;
+	border-radius: var(--teamops-radius-small);
+	border: 1px solid transparent;
+}
+
+.teamops-front-notice p {
+	margin: 0;
+}
+
+.teamops-front-notice.is-success {
+	background: rgba(22, 124, 85, 0.09);
+	border-color: rgba(22, 124, 85, 0.16);
+}
+
+.teamops-front-notice.is-error {
+	background: rgba(180, 35, 24, 0.08);
+	border-color: rgba(180, 35, 24, 0.15);
+}
+
+.teamops-front-toolbar {
+	margin-bottom: 18px;
+}
+
+.teamops-front-layout {
+	display: grid;
+	grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
+	gap: 18px;
+	align-items: start;
+}
+
+.teamops-front-sidebar,
+.teamops-front-main {
+	display: grid;
+	gap: 18px;
+	align-content: start;
+}
+
+.teamops-front-sidebar {
+	position: sticky;
+	top: 18px;
+}
+
+.teamops-front-panel,
+.teamops-front-task {
+	padding: 18px;
+	box-shadow: 0 1px 1px rgba(15, 23, 42, 0.02);
+}
+
+.teamops-front-panel-head,
+.teamops-front-task-head,
+.teamops-front-comment-meta {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: start;
+}
+
+.teamops-front-panel-head p,
+.teamops-front-task-head p,
+.teamops-front-comment-meta small {
+	margin: 4px 0 0;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-panel h3 {
+	font-size: 18px;
+}
+
+.teamops-front-panel p {
+	color: var(--teamops-muted);
+}
+
+.teamops-front-notification-list,
+.teamops-front-project-list,
+.teamops-front-subtasks,
+.teamops-front-comment-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.teamops-front-notification-list li,
+.teamops-front-project-list li,
+.teamops-front-subtasks li,
+.teamops-front-comment-list li {
+	padding: 11px 0;
+	border-bottom: 1px solid var(--teamops-line);
+}
+
+.teamops-front-notification-list li:last-child,
+.teamops-front-project-list li:last-child,
+.teamops-front-subtasks li:last-child,
+.teamops-front-comment-list li:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.teamops-front-notification-list li:first-child,
+.teamops-front-project-list li:first-child,
+.teamops-front-subtasks li:first-child,
+.teamops-front-comment-list li:first-child {
+	padding-top: 0;
+}
+
+.teamops-front-notification-list li.is-unread {
+	padding-left: 12px;
+	border-left: 3px solid var(--teamops-accent);
+}
+
+.teamops-front-notification-list strong,
+.teamops-front-project-list strong,
+.teamops-front-comment-meta strong {
+	display: block;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.teamops-front-notification-list p,
+.teamops-front-comment-list p,
+.teamops-front-project-list span {
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-project-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: baseline;
+}
+
+.teamops-front-filters {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+	gap: 10px;
+	align-items: center;
+}
+
+.teamops-front-inline-form form {
+	display: grid;
+	grid-template-columns: minmax(180px, 220px) auto;
+	gap: 10px;
+	align-items: center;
+}
+
+.teamops-front-task {
+	padding: 18px;
+}
+
+.teamops-front-task-project {
+	margin: 0 0 6px;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--teamops-accent);
+}
+
+.teamops-front-task h3 {
+	font-size: clamp(20px, 3.2cqi, 28px);
+	line-height: 1.08;
+	max-width: 18ch;
+}
+
+.teamops-front-task-badge {
+	flex-shrink: 0;
+	padding: 8px 12px;
+	border-radius: 999px;
+	background: var(--teamops-accent-soft);
+	color: var(--teamops-accent);
+	font-size: 12px;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.teamops-front-task-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.teamops-front-task-meta span {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(31, 41, 51, 0.06);
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-progress {
+	overflow: hidden;
+	height: 6px;
+	margin: 14px 0;
+	border-radius: 999px;
+	background: rgba(31, 41, 51, 0.08);
+}
+
+.teamops-front-progress span {
+	display: block;
+	height: 100%;
+	border-radius: inherit;
+	background: linear-gradient(90deg, var(--teamops-accent) 0%, #59a89d 100%);
+}
+
+.teamops-front-copy {
+	margin: 12px 0 14px;
+	max-width: 58ch;
+}
+
+.teamops-front-copy p,
+.teamops-front-comment-body p {
+	margin: 0;
+	font-size: 14px;
+	color: #415161;
+}
+
+.teamops-front-inline-form {
+	margin-bottom: 12px;
+}
+
+.teamops-front-task-editor {
+	margin-top: 14px;
+	padding-top: 14px;
+	border-top: 1px solid var(--teamops-line);
+}
+
+.teamops-front-task-editor summary {
+	list-style: none;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--teamops-accent);
+}
+
+.teamops-front-task-editor summary::-webkit-details-marker {
+	display: none;
+}
+
+.teamops-front-task-editor[open] summary {
+	margin-bottom: 12px;
+}
+
+.teamops-front-edit-form {
+	display: grid;
+	gap: 14px;
+}
+
+.teamops-front-field-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.teamops-front-field-grid label,
+.teamops-front-field-stack {
+	display: grid;
+	gap: 6px;
+}
+
+.teamops-front-field-grid label span,
+.teamops-front-field-stack span {
+	font-size: 12px;
+	font-weight: 700;
+	color: var(--teamops-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.teamops-front-comments {
+	margin-top: 16px;
+	padding-top: 16px;
+	border-top: 1px solid var(--teamops-line);
+}
+
+.teamops-front-comments h4 {
+	margin-bottom: 10px;
+	font-size: 16px;
+}
+
+.teamops-front-comment-list {
+	margin-bottom: 12px;
+}
+
+.teamops-front-comment-form {
+	display: grid;
+	gap: 10px;
+	margin-top: 14px;
+}
+
+.teamops-front-comment-form label {
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-comment-form small {
+	font-size: 12px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-button,
+.teamops-front-link,
+.teamops-front-shell input,
+.teamops-front-shell select,
+.teamops-front-shell textarea {
+	font-family: inherit;
+}
+
+.teamops-front-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 42px;
+	padding: 10px 16px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--teamops-accent);
+	color: #fff;
+	font-size: 14px !important;
+	font-weight: 700;
+	line-height: 1.1;
+	cursor: pointer;
+	text-decoration: none;
+	transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.teamops-front-button:hover,
+.teamops-front-button:focus {
+	opacity: 0.92;
+	transform: translateY(-1px);
+}
+
+.teamops-front-button-secondary {
+	background: rgba(31, 41, 51, 0.07);
+	color: var(--teamops-ink);
+}
+
+.teamops-front-button-secondary:hover,
+.teamops-front-button-secondary:focus {
+	background: rgba(31, 41, 51, 0.12);
+}
+
+.teamops-front-link {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--teamops-accent);
+	font-size: 13px !important;
+	font-weight: 700;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.teamops-front-link:hover,
+.teamops-front-link:focus {
+	text-decoration: underline;
+}
+
+.teamops-front-shell input,
+.teamops-front-shell select,
+.teamops-front-shell textarea {
+	width: 100%;
+	border: 1px solid rgba(31, 41, 51, 0.12);
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.96);
+	padding: 11px 14px;
+	color: var(--teamops-ink);
+	box-shadow: none;
+	font-size: 14px !important;
+	font-weight: 500;
+	line-height: 1.25;
+}
+
+.teamops-front-shell input {
+	min-height: 44px;
+}
+
+.teamops-front-shell select {
+	min-height: 44px;
+	max-width: 100%;
+	appearance: auto;
+}
+
+.teamops-front-shell textarea {
+	resize: vertical;
+	min-height: 110px;
+}
+
+.teamops-front-subtasks li {
+	padding: 8px 0;
+}
+
+.teamops-front-checklist-form {
+	display: block;
+}
+
+.teamops-front-check-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--teamops-ink);
+	cursor: pointer;
+	text-align: left;
+}
+
+.teamops-front-check-box {
+	position: relative;
+	width: 18px;
+	height: 18px;
+	flex: 0 0 18px;
+	border: 2px solid rgba(31, 41, 51, 0.28);
+	border-radius: 5px;
+	background: #fff;
+	transition: all 120ms ease;
+}
+
+.teamops-front-check-toggle.is-complete .teamops-front-check-box {
+	border-color: var(--teamops-accent);
+	background: var(--teamops-accent);
+}
+
+.teamops-front-check-toggle.is-complete .teamops-front-check-box::after {
+	content: "";
+	position: absolute;
+	left: 4px;
+	top: 1px;
+	width: 5px;
+	height: 9px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+
+.teamops-front-check-text {
+	font-size: 14px;
+}
+
+.teamops-front-check-text.is-complete {
+	text-decoration: line-through;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-shell a {
+	color: var(--teamops-accent);
+}
+
+@container (max-width: 900px) {
+	.teamops-front-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.teamops-front-sidebar {
+		position: static;
+	}
+}
+
+@container (max-width: 720px) {
+	.teamops-front-shell {
+		padding: 16px;
+		border-radius: 18px;
+	}
+
+	.teamops-front-hero {
+		padding: 16px;
+	}
+
+	.teamops-front-hero h2 {
+		font-size: clamp(22px, 8cqi, 30px);
+		max-width: none;
+	}
+
+	.teamops-front-panel-head,
+	.teamops-front-task-head,
+	.teamops-front-comment-meta,
+	.teamops-front-project-list li {
+		flex-direction: column;
+	}
+
+	.teamops-front-task h3 {
+		font-size: 22px;
+		max-width: none;
+	}
+
+	.teamops-front-field-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@container (max-width: 560px) {
+	.teamops-front-metrics,
+	.teamops-front-filters,
+	.teamops-front-inline-form form {
+		grid-template-columns: 1fr;
+	}
+}
+
+.teamops-front-kanban-panel {
+	overflow: hidden;
+}
+
+.teamops-front-kanban {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+	gap: 14px;
+	overflow-x: visible;
+	padding-bottom: 4px;
+}
+
+.teamops-front-kanban.is-busy {
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+.teamops-front-kanban-column {
+	display: grid;
+	gap: 10px;
+	padding: 14px;
+	border-radius: 16px;
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 8%, #ffffff);
+	border: 1px solid color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 18%, rgba(31, 41, 51, 0.08));
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.teamops-front-kanban-head h4 {
+	font-size: 15px;
+	margin-bottom: 4px;
+	color: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 70%, var(--teamops-ink));
+}
+
+.teamops-front-kanban-head span {
+	font-size: 12px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-kanban-dropzone {
+	display: grid;
+	gap: 10px;
+	min-height: 120px;
+	padding: 2px;
+	border-radius: 12px;
+	transition: background 120ms ease, border-color 120ms ease;
+}
+
+.teamops-front-kanban-dropzone.is-over {
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 12%, #ffffff);
+}
+
+.teamops-front-kanban-empty {
+	margin: 0;
+	padding: 14px 12px;
+	border: 1px dashed rgba(31, 41, 51, 0.16);
+	border-radius: 12px;
+	font-size: 13px;
+	color: var(--teamops-muted);
+	text-align: center;
+}
+
+.teamops-front-kanban-card {
+	display: grid;
+	gap: 6px;
+	padding: 12px;
+	border-radius: 14px;
+	border: 1px solid color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 12%, rgba(31, 41, 51, 0.08));
+	background: rgba(255, 255, 255, 0.98);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+	text-decoration: none;
+	color: var(--teamops-ink);
+	cursor: grab;
+	position: relative;
+}
+
+.teamops-front-kanban-card::before {
+	content: "";
+	position: absolute;
+	inset: 0 auto 0 0;
+	width: 4px;
+	border-radius: 14px 0 0 14px;
+	background: var(--teamops-status-accent, var(--teamops-accent));
+}
+
+.teamops-front-kanban-card.is-dragging {
+	opacity: 0.45;
+}
+
+.teamops-front-kanban-card strong {
+	font-size: 14px;
+	line-height: 1.35;
+}
+
+.teamops-front-kanban-card > span {
+	font-size: 12px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-kanban-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.teamops-front-kanban-meta span {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 8px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--teamops-status-accent, var(--teamops-accent)) 10%, #ffffff);
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--teamops-muted);
+}
+
+@container (max-width: 900px) {
+	.teamops-front-kanban {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@container (max-width: 560px) {
+	.teamops-front-kanban {
+		grid-template-columns: 1fr;
+	}
+}
+
+.teamops-front-hero-dashboard {
+	margin-bottom: 20px;
+}
+
+.teamops-front-metrics-quad {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.teamops-front-dashboard-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.8fr);
+	gap: 18px;
+	align-items: start;
+}
+
+.teamops-front-stack {
+	display: grid;
+	gap: 18px;
+}
+
+.teamops-front-project-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 14px;
+}
+
+.teamops-front-project-card,
+.teamops-front-milestone-card {
+	display: grid;
+	gap: 12px;
+	padding: 16px;
+	border: 1px solid rgba(31, 41, 51, 0.08);
+	border-radius: 16px;
+	background: rgba(255, 255, 255, 0.96);
+	text-decoration: none;
+	color: var(--teamops-ink);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.teamops-front-project-card-head {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: start;
+}
+
+.teamops-front-project-card h4,
+.teamops-front-milestone-card h4 {
+	margin: 0;
+	font-size: 20px;
+	line-height: 1.1;
+}
+
+.teamops-front-project-priority,
+.teamops-front-project-statusline span {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(31, 41, 51, 0.06);
+	font-size: 12px;
+	font-weight: 700;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-project-card-meta,
+.teamops-front-project-statusline {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.teamops-front-project-card-meta span,
+.teamops-front-project-link,
+.teamops-front-milestone-date {
+	font-size: 13px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-project-link {
+	font-weight: 700;
+	color: var(--teamops-accent);
+}
+
+.teamops-front-project-card-note {
+	margin: 0;
+}
+
+.teamops-front-project-header {
+	margin-bottom: 16px;
+}
+
+.teamops-front-backlink {
+	display: inline-flex;
+	margin-bottom: 14px;
+	font-size: 13px;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.teamops-front-project-heading {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	align-items: start;
+	margin-bottom: 16px;
+}
+
+.teamops-front-project-heading h2 {
+	font-size: clamp(28px, 4cqi, 40px);
+	line-height: 1.02;
+	margin-bottom: 8px;
+}
+
+.teamops-front-project-summary {
+	max-width: 60ch;
+	margin: 0;
+}
+
+.teamops-front-project-metrics {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.teamops-front-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 0 0 18px;
+}
+
+.teamops-front-tab {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 14px;
+	border-radius: 999px;
+	border: 1px solid rgba(31, 41, 51, 0.08);
+	background: rgba(255, 255, 255, 0.9);
+	color: var(--teamops-muted);
+	font-size: 13px;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.teamops-front-tab.is-active {
+	background: var(--teamops-accent);
+	border-color: var(--teamops-accent);
+	color: #fff;
+}
+
+.teamops-front-overview-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.teamops-front-overview-list,
+.teamops-front-people-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.teamops-front-overview-list li,
+.teamops-front-people-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--teamops-line);
+}
+
+.teamops-front-overview-list li:last-child,
+.teamops-front-people-list li:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.teamops-front-overview-list li:first-child,
+.teamops-front-people-list li:first-child {
+	padding-top: 0;
+}
+
+.teamops-front-overview-list span,
+.teamops-front-people-list li {
+	font-size: 14px;
+	color: var(--teamops-muted);
+}
+
+.teamops-front-overview-list strong {
+	font-size: 14px;
+	color: var(--teamops-ink);
+}
+
+.teamops-front-task-stack,
+.teamops-front-milestone-grid {
+	display: grid;
+	gap: 18px;
+}
+
+.teamops-front-empty-tab {
+	padding: 28px;
+}
+
+@container (max-width: 980px) {
+	.teamops-front-dashboard-grid,
+	.teamops-front-overview-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.teamops-front-metrics-quad,
+	.teamops-front-project-metrics {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@container (max-width: 640px) {
+	.teamops-front-project-grid,
+	.teamops-front-metrics-quad,
+	.teamops-front-project-metrics {
+		grid-template-columns: 1fr;
+	}
+
+	.teamops-front-project-card-head,
+	.teamops-front-project-heading,
+	.teamops-front-overview-list li,
+	.teamops-front-people-list li {
+		flex-direction: column;
+	}
+}

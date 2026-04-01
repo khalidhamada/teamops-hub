@@ -1,0 +1,15 @@
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# WordPress/runtime artifacts
+*.log
+*.tmp
+node_modules/
+vendor/
+
+# Test and local coverage output
+coverage/
+.phpunit.result.cache

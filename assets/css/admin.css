@@ -1,0 +1,252 @@
+.teamops-hub-admin .teamops-grid,
+.teamops-hub-admin .teamops-layout {
+	display: grid;
+	gap: 20px;
+}
+
+.teamops-hub-admin .teamops-grid {
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	margin: 20px 0;
+}
+
+.teamops-hub-admin .teamops-grid.teamops-grid-compact {
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.teamops-hub-admin .teamops-layout {
+	grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+	align-items: start;
+	margin-top: 20px;
+}
+
+.teamops-card {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.teamops-form-card p {
+	display: grid;
+	gap: 6px;
+}
+
+.teamops-form-card label {
+	font-weight: 600;
+}
+
+.teamops-form-card small {
+	color: #646970;
+}
+
+.teamops-input-full,
+.teamops-form-card .regular-text,
+.teamops-form-card .large-text,
+.teamops-form-card select,
+.teamops-form-card textarea,
+.teamops-form-card input[type='text'],
+.teamops-form-card input[type='date'],
+.teamops-form-card input[type='number'] {
+	box-sizing: border-box;
+	max-width: 100%;
+	width: 100%;
+}
+
+.teamops-form-card select[multiple] {
+	min-height: 140px;
+}
+
+.teamops-table-wrap {
+	overflow-x: auto;
+}
+
+.teamops-richtext p:first-child {
+	margin-top: 0;
+}
+
+.teamops-richtext p:last-child {
+	margin-bottom: 0;
+}
+
+.teamops-mt-16 {
+	margin-top: 16px;
+}
+
+.teamops-stat-list {
+	margin: 0;
+}
+
+.teamops-stat-list li,
+.teamops-project-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.teamops-big-number {
+	font-size: 40px;
+	font-weight: 700;
+	line-height: 1;
+	margin: 0;
+}
+
+.teamops-section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+	gap: 16px;
+}
+
+.teamops-section-header h2,
+.teamops-section-header p {
+	margin: 0;
+}
+
+.teamops-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 16px;
+}
+
+.teamops-filters input[type='search'],
+.teamops-filters select {
+	min-width: 160px;
+}
+
+.teamops-task-work-item {
+	padding: 16px 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.teamops-task-work-item:first-of-type {
+	padding-top: 0;
+}
+
+.teamops-task-work-item:last-of-type {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.teamops-task-work-header {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	align-items: start;
+}
+
+.teamops-task-work-header h3 {
+	margin: 0 0 4px;
+}
+
+.teamops-task-work-header p {
+	margin: 0;
+	color: #646970;
+}
+
+.teamops-task-checklist-badge {
+	color: #50575e;
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+.teamops-task-work-actions {
+	margin: 12px 0;
+}
+
+.teamops-subtask-list {
+	margin: 0;
+}
+
+.teamops-subtask-list li {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.teamops-subtask-list li:last-child {
+	border-bottom: 0;
+}
+
+.teamops-subtask-toggle-form {
+	margin: 0;
+}
+
+.teamops-subtask-toggle {
+	padding: 0;
+	text-decoration: none;
+}
+
+.teamops-subtask-complete {
+	text-decoration: line-through;
+	color: #646970;
+}
+
+.teamops-comment-section {
+	margin-top: 16px;
+	padding-top: 16px;
+	border-top: 1px solid #f0f0f1;
+}
+
+.teamops-comment-list,
+.teamops-notification-list {
+	margin: 0;
+}
+
+.teamops-comment-list li,
+.teamops-notification-list li {
+	padding: 12px 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.teamops-comment-list li:last-child,
+.teamops-notification-list li:last-child {
+	border-bottom: 0;
+}
+
+.teamops-comment-meta {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: baseline;
+	margin-bottom: 6px;
+}
+
+.teamops-comment-meta small,
+.teamops-notification-list small {
+	color: #646970;
+}
+
+.teamops-comment-body p {
+	margin: 0;
+}
+
+.teamops-notification-list p {
+	margin: 6px 0;
+}
+
+.teamops-notification-unread {
+	border-left: 3px solid #2271b1;
+	padding-left: 12px;
+}
+
+.teamops-notification-read {
+	opacity: 0.8;
+}
+
+@media (max-width: 960px) {
+	.teamops-hub-admin .teamops-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.teamops-task-work-header,
+	.teamops-section-header,
+	.teamops-comment-meta {
+		flex-direction: column;
+	}
+}
